@@ -88,8 +88,18 @@ public class MainActivity extends AppCompatActivity {
                     if (str.length() == 0) return;
                     if (str.length() == 1 && str.charAt(0) == '-') return;
                     DecimalFormat df = new DecimalFormat("###.###############");
-                    String s = df.format(calculate(str.toString()));
-                    result.setText(s.equals("-0") ? "0" : s);
+                    String num = null;
+                    double d = calculate(str.toString());
+                    if (Double.isNaN(d) || Double.isInfinite(d)) {
+                        result.setText("不能除以0");
+                    } else {
+                        try {
+                            num = df.format(d);
+                        } catch (Exception e) {
+                            System.out.println("错误！");
+                        }
+                        result.setText("-0".equals(num) ? "0" : num);
+                    }
                     result.setTextColor(Color.parseColor("#ff00ff"));
                     result.setTextSize(36);
                     return;
@@ -133,8 +143,18 @@ public class MainActivity extends AppCompatActivity {
             int len = str.length();
             if (len != 0) {
                 DecimalFormat df = new DecimalFormat("###.###############");
-                String s = df.format(calculate(str.toString()));
-                result.setText(s.equals("-0") ? "0" : s);
+                String num = null;
+                double d = calculate(str.toString());
+                if (Double.isNaN(d) || Double.isInfinite(d)) {
+                    result.setText("不能除以0");
+                } else {
+                    try {
+                        num = df.format(d);
+                    } catch (Exception e) {
+                        System.out.println("错误！");
+                    }
+                    result.setText("-0".equals(num) ? "0" : num);
+                }
             }
         } catch (NumberFormatException e) {
             result.setText("错误");
@@ -169,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         double num1 = 0.0, num2 = 0.0, num3 = 0.0;
         for (int i = 0; i < len; ++i) {
             String s = queue.poll();
-            if (!s.equals("+") && !s.equals("-") && !s.equals("*") && !s.equals("/")) {
+            if (!isOperator(s)) {
                 stack.push(Double.valueOf(s));
             } else {
                 if (stack.isEmpty()) return 0.0;
